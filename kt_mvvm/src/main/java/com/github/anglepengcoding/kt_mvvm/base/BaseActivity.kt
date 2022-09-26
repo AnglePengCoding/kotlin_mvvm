@@ -1,317 +1,195 @@
 package com.github.anglepengcoding.kt_mvvm.base
 
-import android.animation.ValueAnimator
-import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.airbnb.lottie.LottieAnimationView
-import com.blankj.utilcode.util.BarUtils.transparentStatusBar
+import com.blankj.utilcode.util.BarUtils.*
 import com.blankj.utilcode.util.BusUtils
+import com.blankj.utilcode.util.LogUtils
 import com.github.anglepengcoding.kt_mvvm.R
 import com.github.anglepengcoding.kt_mvvm.ext.hideSoftInput
+import com.jakewharton.rxbinding4.view.clicks
 import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.common_base_error.*
-import kotlinx.android.synthetic.main.common_head_layout.*
+import java.util.concurrent.TimeUnit
 
 /**
  * @author AnglePenCoding
  * Created by on 2022/9/22 0022
  * @website https://github.com/AnglePengCoding
  */
-open abstract class BaseActivity : AppCompatActivity(), IBaseUIView  {
+open abstract class BaseActivity : AppCompatActivity(), IBaseUIView {
 
-    lateinit var mContext: Context
+    /*  开发者自由发挥 */
+    var leftImageView: ImageView? = null //标题栏左键
+    var rightImageView: ImageView? = null //标题栏右键
+    var mRightText: TextView? = null //标题栏右文字
+    var mTitleText: TextView? = null //标题栏文字
 
-    open fun setCreateBefore() {} //setCreateBefore之前的方法
+    abstract fun displayStatusBar(): Boolean//是否显示标题栏
 
-    open fun setContentBefore() {} //setContentView之前的方法
-
-    open fun isShowBarStatus(): Boolean { return true } //是否显示状态栏
-
-    abstract fun getChildTitle(): String? //获取标题
-
-    abstract fun getLayoutID(): Int //获取布局资源文件
+    abstract fun createLayout(): Int //添加布局
 
     abstract fun initView() //初始化view
 
     abstract fun initData() //初始化数据
 
-    abstract fun initMainNetData() //主协议请求数据,适用于必须请求协议才能展示的页面,在initData之前请求
-
-    open fun isShowLoading(): Boolean { return false } //是否显示加载中布局,如果return true则必须重写initMainNetData方法
+    abstract fun initPresenter()//网络请求
 
     open fun getBundleExtras(extras: Bundle?) {} //接收bundle数据
 
-    //当前页面状态
-    var myBaseViewStatus = EBaseViewStatus.SUCCESS //页面显示状态 SUCCESS, LOADING, ERROR  分别表示正常、加载中、失败
-
-    var loadingView: View? = null //加载中布局
-    var errorView: View? = null //错误布局
-
-    var lottieLoadingView: LottieAnimationView? = null
-    var lottieErrorView: LottieAnimationView? = null
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
-        setCreateBefore()
         super.onCreate(savedInstanceState)
-        mContext = this
-        setContentBefore()
-        setContentView(R.layout.activity_base)
+        LogUtils.e(this::class.java.simpleName + ">>> onCreate <<<")
+        initStatusBar()
+        initViews()
+        setChildView()
+        setListener()
         BusUtils.register(this)
         intent.extras?.let { getBundleExtras(it) }
-        initDefaultBaseVIew()
-        setChildView(getLayoutID(), getChildTitle(), isShowLoading())
+        init()
+    }
+
+    open fun setListener() {
+        leftImageView?.clicks()
+            ?.throttleFirst(2000, TimeUnit.MICROSECONDS)
+            ?.subscribe {
+                hideSoftInput()
+                finish()
+            }
+
+        mBtAgain?.clicks()?.throttleFirst(2000, TimeUnit.MICROSECONDS)
+            ?.subscribe {
+                initPresenter()
+            }
+    }
+
+    private fun initViews() {
+        mTitleText = findViewById(R.id.mTitleText)
+        mRightText = findViewById(R.id.mRightText)
+        rightImageView = findViewById(R.id.rightImageView)
+        leftImageView = findViewById(R.id.leftImageView)
+    }
+
+    private fun setChildView() {
+        val view = LayoutInflater.from(this).inflate(createLayout(), mFrameLayout, false)
+        mFrameLayout.addView(view)
+    }
+
+    private fun initStatusBar() {
+        transparentStatusBar(this)
+        setStatusBarLightMode(this, true)
+        setContentView(R.layout.activity_base)
+        setNavBarColor(this, Color.WHITE)
+        displayToolbarLayout()
+        addMarginTopEqualStatusBarHeight(mRlTitleLayout)
     }
 
 
-    /**
-     * 初始化基础布局
-     */
-    fun initDefaultBaseVIew(){
-        //是否显示状态栏
-        if(isShowBarStatus()) {
-            transparentStatusBar(this)
-        }
-
-        ll_base_right.visibility = View.INVISIBLE
-        iv_base_right.visibility = View.GONE
-        tv_base_right.visibility = View.GONE
-        base_main.visibility = View.VISIBLE
-
-        rl_base_back.setOnClickListener { backClick() }
-        ll_base_right.setOnClickListener { rightClick() }
-
-    }
-
-    /**
-     * 返回事件
-     */
-    open fun backClick() {
-        hideSoftInput()
-        finish()
-    }
-
-    /**
-     * 右侧布局事件
-     */
-    open fun rightClick() {}
-
-
-    /**
-     * 设置子布局+标题
-     *
-     * @param layoutID
-     * @param baseTitle
-     */
-    open fun setChildView(layoutID: Int, baseTitle: String?, isShowLoading: Boolean) {
-        setTitle(baseTitle)
-        val view = LayoutInflater.from(this).inflate(layoutID, base_main, false)
-        base_main.addView(view)
+    private fun init() {
         initView()
         initData()
-        initMainNetData()
-        if (isShowLoading) {
-            showLoadingLayout()
+        initPresenter()
+    }
+
+    private fun displayToolbarLayout() {
+        if (displayStatusBar()) {
+            mRlTitleLayout.visibility = View.VISIBLE
         } else {
-            showSuccessLayout()
+            mRlTitleLayout.visibility = View.GONE
         }
     }
 
-    /**
-     * 去掉标题栏
-     */
-    open fun setHeadGone() {
-        base_head.visibility = View.GONE
+    override fun onStart() {
+        LogUtils.e(this::class.java.simpleName + ">>> onStart <<<")
+        super.onStart()
     }
 
-    /**
-     * 隐藏返回按钮
-     */
-    open fun setBackGone() {
-        rl_base_back.visibility = View.GONE
-    }
-
-    /**
-     * 隐藏返回按钮
-     */
-    open fun setBackInVisible() {
-        rl_base_back.visibility = View.INVISIBLE
-    }
-
-    /**
-     * 显示返回按钮
-     */
-    open fun setBackVisible() {
-        rl_base_back.visibility = View.VISIBLE
-    }
-
-    /**
-     * 设置标题
-     *
-     * @param baseTitle
-     */
-    open fun setTitle(baseTitle: String?) {
-        tv_base_title.text = baseTitle
-    }
-
-    /**
-     * 设置右侧文字
-     * @param rightTitle
-     * @param listener
-     */
-    open fun setRightTitle(
-        rightTitle: String?,
-        listener: View.OnClickListener?
-    ) {
-        ll_base_right.visibility = View.VISIBLE
-        tv_base_right.visibility = View.VISIBLE
-        tv_base_right.text = rightTitle
-        tv_base_right.setOnClickListener(listener)
-    }
-
-    /**
-     * 设置右侧文字
-     * @param rightTitle
-     */
-    protected open fun setRightTitle(rightTitle: String?) {
-        ll_base_right.visibility = View.VISIBLE
-        tv_base_right.visibility = View.VISIBLE
-        tv_base_right.text = rightTitle
-    }
-
-    /**
-     * 设置右侧图标
-     *
-     * @param resource
-     */
-    open fun setRightImg(resource: Int) {
-        ll_base_right.visibility = View.VISIBLE
-        iv_base_right.visibility = View.VISIBLE
-        iv_base_right.setImageResource(resource)
-    }
-
-    /**
-     * 设置出错提示
-     * @param error
-     */
-    open fun setErrorText(error: String?) {
-        tv_error?.text = error
-        tv_error_hint?.text = error
-    }
-
-
-    /**
-     * 显示加载中界面
-     */
-    override fun showLoadingLayout(){
-        loadingView?:let {
-            loadingView = vs_loading.inflate()
-            lottieLoadingView = loadingView?.findViewById(R.id.lottie_loading_view)
-            lottieLoadingView!!.setAnimation("whale.zip")
-            lottieLoadingView!!.repeatCount = ValueAnimator.INFINITE
-            lottieLoadingView!!.playAnimation()
-        }
-
-        //显示界面
-        base_main.visibility = View.GONE
-        loadingView?.visibility = View.VISIBLE
-        errorView?.visibility = View.GONE
-
-        //暂停动画防止卡顿
-        lottieErrorView?.pauseAnimation()
-
-        //更改状态
-        myBaseViewStatus = EBaseViewStatus.LOADING
-    }
-
-    /**
-     * 显示子布局,隐藏加载中和错误布局
-     */
-    override fun showSuccessLayout(){
-        //显示界面
-        base_main.visibility = View.VISIBLE
-        loadingView?.visibility = View.GONE
-        errorView?.visibility = View.GONE
-
-        //暂停动画防止卡顿
-        lottieLoadingView?.pauseAnimation()
-        lottieErrorView?.pauseAnimation()
-
-        //更改状态
-        myBaseViewStatus = EBaseViewStatus.SUCCESS
-    }
-
-    /**
-     * 显示错误布局,隐藏子布局
-     *
-     * @param error
-     */
-    override fun showErrorLayout(errorMsg: String?) {
-        errorView?:let {
-            errorView = vs_error.inflate()
-            lottieErrorView = errorView?.findViewById(R.id.lottie_error_view)
-            lottieErrorView!!.setAnimation("halloween_smoothymon.json")
-            lottieErrorView!!.repeatCount = ValueAnimator.INFINITE
-            lottieErrorView!!.playAnimation()
-
-            tv_reload.setOnClickListener { initMainNetData() }
-        }
-
-        //显示界面
-        base_main.visibility = View.GONE
-        loadingView?.visibility = View.GONE
-        errorView?.visibility = View.VISIBLE
-
-        if (!TextUtils.isEmpty(errorMsg)) {
-            tv_error.text = errorMsg
-            tv_error_hint.text = errorMsg
-        }
-
-        //暂停动画防止卡顿
-        lottieLoadingView?.pauseAnimation()
-
-        //更改状态
-        myBaseViewStatus = EBaseViewStatus.ERROR
-    }
-
-    override fun getBaseViewStatus(): EBaseViewStatus? {
-        return myBaseViewStatus
-    }
-
-    override fun setBaseViewStatus(baseViewStatus: EBaseViewStatus?) {
-        when (baseViewStatus) {
-            EBaseViewStatus.LOADING -> { showLoadingLayout() }
-            EBaseViewStatus.SUCCESS -> { showSuccessLayout() }
-            EBaseViewStatus.ERROR -> { showErrorLayout("") }
-        }
+    override fun onStop() {
+        LogUtils.e(this::class.java.simpleName + ">>> onStop <<<")
+        super.onStop()
     }
 
     override fun onResume() {
+        LogUtils.e(this::class.java.simpleName + ">>> onResume <<<")
         super.onResume()
-        if(getBaseViewStatus() == EBaseViewStatus.LOADING){
-            lottieLoadingView?.resumeAnimation()
-        }
-        if(getBaseViewStatus() == EBaseViewStatus.ERROR){
-            lottieErrorView?.resumeAnimation()
-        }
     }
 
     override fun onPause() {
+        mLottie?.pauseAnimation()
+        LogUtils.e(this::class.java.simpleName + ">>> onPa use <<<")
         super.onPause()
-        lottieLoadingView?.pauseAnimation()
-        lottieErrorView?.pauseAnimation()
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        LogUtils.e(this::class.java.simpleName + ">>> onDestroy <<<")
         BusUtils.unregister(this)
     }
 
-    abstract fun showLoadingDialog(content:  String = "加载中")
+    /**
+     * 加载中
+     */
+    fun showLoadingDialog() {
+        mBtAgain.visibility = View.VISIBLE
+        mTvAgain.visibility = View.VISIBLE
+        mTvAgain.text = "加载中"
+        mLottie!!.setAnimation("loading.json")
+        mLottie.playAnimation()
+    }
 
-    abstract fun dismissLoadingDialog()
+    fun dismissLoadingDialog() {
+        mBtAgain.visibility = View.GONE
+        mTvAgain.visibility = View.GONE
+        mLottie.visibility = View.GONE
+    }
+
+    /**
+     * 无网络
+     */
+    fun unknownHostDialog() {
+        mTvAgain.text = "无网络"
+        mLottie!!.setAnimation("unknownHost.json")
+        mLottie.playAnimation()
+    }
+
+    /**
+     * 网络超时
+     */
+    fun timeOutDialog() {
+        mTvAgain.text = "网络超时"
+        mLottie!!.setAnimation("unknownHost.json")
+        mLottie.playAnimation()
+    }
+
+
+    /**
+     * 数据错误,json错误
+     */
+    fun jsonSyntaxDialog() {
+        mTvAgain.text = "数据错误"
+        mLottie!!.setAnimation("json_syntax.json")
+        mLottie.playAnimation()
+    }
+
+    /**
+     * 网络错误
+     */
+    fun socketDialog() {
+        mTvAgain.text = "网络错误"
+        mLottie!!.setAnimation("unknownHost.json")
+        mLottie.playAnimation()
+    }
+
+    /**
+     * 未知错误
+     */
+    fun elseNetDialog() {
+        mTvAgain.text = "未知错误"
+        mLottie!!.setAnimation("json_syntax.json")
+        mLottie.playAnimation()
+    }
 }

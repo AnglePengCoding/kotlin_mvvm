@@ -1,38 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:id="@+id/mLinearLayout"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <include
-        layout="@layout/common_head_layout"/>
-
-    <LinearLayout
-        android:id="@+id/base_main"
+    android:background="@color/white">
+    <RelativeLayout
+        android:id="@+id/mRlTitleLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/base_head"
-        android:background="@color/defaultbg"
-        android:orientation="vertical"
+        android:layout_height="50dp"
+        android:background="@color/white"
         >
+    <ImageView
+        android:id="@+id/leftImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:background="?attr/actionBarItemBackground"
+        android:contentDescription="@null"
+        android:padding="10dp"
+        android:src="@drawable/ic_back"
+        tools:ignore="VectorDrawableCompat" />
 
-    </LinearLayout>
+    <ImageView
+        android:id="@+id/rightImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:padding="12dp" />
 
-    <ViewStub
-        android:id="@+id/vs_loading"
+    <TextView
+        android:id="@+id/mRightText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:padding="12dp" />
+
+        <TextView
+            android:id="@+id/mTitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:ellipsize="end"
+            android:lines="1"
+            android:maxEms="10"
+            android:text="标题"
+            android:textColor="@color/black"
+            android:textSize="17dp" />
+
+    <View
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/base_head"
-        android:layout="@layout/common_base_loading"
-        />
+        android:layout_height="2dp"
+        android:layout_alignParentBottom="true"
+        android:background="#efefef" />
+    </RelativeLayout>
 
-    <ViewStub
-        android:id="@+id/vs_error"
+    <FrameLayout
+        android:id="@+id/mFrameLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/base_head"
-        android:layout="@layout/common_base_error"
-        />
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <com.airbnb.lottie.LottieAnimationView
+                android:layout_centerInParent="true"
+                android:id="@+id/mLottie"
+                app:lottie_loop="true"
+                app:lottie_autoPlay="true"
+                android:layout_width="@dimen/dp_160"
+                android:layout_height="@dimen/dp_160"/>
+            <TextView
+                android:layout_marginTop="@dimen/dp_15"
+                android:layout_centerInParent="true"
+                android:layout_below="@+id/mLottie"
+                android:id="@+id/mTvAgain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <Button
+                android:id="@+id/mBtAgain"
+                android:textColor="@color/white"
+                android:background="@drawable/shape_blue_again"
+                android:text="重新尝试"
+                android:layout_marginTop="@dimen/dp_15"
+                android:layout_centerInParent="true"
+                android:layout_below="@+id/mTvAgain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </Button>
+        </RelativeLayout>
 
 
-</RelativeLayout>
+    </FrameLayout>
+
+</LinearLayout>

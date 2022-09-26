@@ -49,10 +49,6 @@ fun Context.hideSoftInput(){
     imm?.hideSoftInputFromWindow((this as Activity).window.decorView.windowToken, 0)
 }
 
-/**
- * 快捷创建viewmodel
- */
-inline fun<reified T: ViewModel> BaseActivity.getViewModel(): T = ViewModelProvider(this).get(T::class.java)
 
 /**
  * 快捷创建viewmodel

@@ -4,6 +4,7 @@ import androidx.annotation.MainThread
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
+import androidx.viewbinding.ViewBinding
 import com.github.anglepengcoding.kt_mvvm.R
 import com.github.anglepengcoding.kt_mvvm.ext.paresVmException
 import com.github.anglepengcoding.kt_mvvm.ext.paresVmResult
@@ -100,8 +101,15 @@ inline fun <T> VmLiveData<T>.vmObserverLoading(
                 activity.dismissLoadingDialog()
             }
             is VmState.Error -> {
-                if (null != tips && tips) activity!!.showToast(it.error.errorMsg)
-                activity.dismissLoadingDialog()
+                if (null != tips && tips) {
+                    when (it.error.errorMsg) {
+                        "无网络连接" -> activity.unknownHostDialog()
+                        "网络超时" -> activity.timeOutDialog()
+                        "数据错误,json错误" -> activity.jsonSyntaxDialog()
+                        "网络错误" -> activity.socketDialog()
+                        "未知错误" -> activity.elseNetDialog()
+                    }
+                }
             }
         }
     }
@@ -214,19 +222,19 @@ inline fun <T> VmLiveData<T>.vmObserverMain(
     observe(activity) {
         when (it) {
             is VmState.Loading -> {
-                if (activity.getBaseViewStatus() != EBaseViewStatus.SUCCESS) activity.showLoadingLayout()
+//                if (activity.getBaseViewStatus() != EBaseViewStatus.SUCCESS) activity.showLoadingLayout()
             }
             is VmState.Success -> {
                 onSuccess(it.data)
-                activity.showSuccessLayout()
+//                activity.showSuccessLayout()
                 onComplete()
             }
             is VmState.Error -> {
                 if (null != tips && tips) activity!!.showToast(it.error.errorMsg)
-                if (activity.getBaseViewStatus() != EBaseViewStatus.SUCCESS) {
-                    activity.showErrorLayout(it.error.errorMsg)
-                    onComplete()
-                }
+//                if (activity.getBaseViewStatus() != EBaseViewStatus.SUCCESS) {
+//                    activity.showErrorLayout(it.error.errorMsg)
+//                    onComplete()
+//                }
             }
         }
     }
@@ -369,17 +377,17 @@ inline fun <T> VmLiveData<T>.vmObserverMain(
     observe(fragment) {
         when (it) {
             is VmState.Loading -> {
-                if (fragment.getBaseViewStatus() != EBaseViewStatus.SUCCESS) fragment.showLoadingLayout()
+//                if (fragment.getBaseViewStatus() != EBaseViewStatus.SUCCESS) fragment.showLoadingLayout()
             }
             is VmState.Success -> {
                 onSuccess(it.data)
-                fragment.showSuccessLayout()
+//                fragment.showSuccessLayout()
             }
             is VmState.Error -> {
                 if (null != tips && tips) fragment.requireContext().showToast(it.error.errorMsg)
-                if (fragment.getBaseViewStatus() != EBaseViewStatus.SUCCESS) {
-                    fragment.showErrorLayout(it.error.errorMsg)
-                }
+//                if (fragment.getBaseViewStatus() != EBaseViewStatus.SUCCESS) {
+//                    fragment.showErrorLayout(it.error.errorMsg)
+//                }
             }
         }
     }
@@ -403,18 +411,18 @@ inline fun <T> VmLiveData<T>.vmObserverMain(
     observe(fragment) {
         when (it) {
             is VmState.Loading -> {
-                if (fragment.getBaseViewStatus() != EBaseViewStatus.SUCCESS) fragment.showLoadingLayout()
+//                if (fragment.getBaseViewStatus() != EBaseViewStatus.SUCCESS) fragment.showLoadingLayout()
             }
             is VmState.Success -> {
                 onSuccess(it.data)
-                fragment.showSuccessLayout()
+//                fragment.showSuccessLayout()
                 onComplete()
             }
             is VmState.Error -> {
                 if (null != tips && tips) fragment.requireContext().showToast(it.error.errorMsg)
-                if (fragment.getBaseViewStatus() != EBaseViewStatus.SUCCESS) {
-                    fragment.showErrorLayout(it.error.errorMsg)
-                }
+//                if (fragment.getBaseViewStatus() != EBaseViewStatus.SUCCESS) {
+//                    fragment.showErrorLayout(it.error.errorMsg)
+//                }
                 onComplete()
             }
         }

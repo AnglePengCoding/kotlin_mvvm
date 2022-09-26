@@ -19,7 +19,7 @@ class MainRepository {
             .addQuery("type", "led")
             .toClass<Test>()
             .await()
-        return BaseData("", result, "")
+        return BaseData("", result, "200")
     }
 
     suspend fun onRefresh(): BaseData<Test> = getTest(WAN_ANDROID_BASEURL + WAN_ARTICLE)

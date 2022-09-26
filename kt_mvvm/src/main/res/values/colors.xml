@@ -4,7 +4,7 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
-
+    <color name="default_text_color" >#8A000000</color>
     <!-- 页面默认背景颜色 -->
     <color name="defaultbg">#F2F3F5</color>
 
