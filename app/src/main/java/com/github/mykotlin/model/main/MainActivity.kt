@@ -1,6 +1,5 @@
 package com.github.mykotlin.model.main
 
-import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.lifecycle.rxLifeScope
 import com.github.anglepengcoding.kt_mvvm.base.BaseActivity
@@ -13,7 +12,7 @@ class MainActivity : BaseActivity() {
 
 
     override fun displayStatusBar(): Boolean {
-        return false
+        return true
     }
 
     override fun createLayout(): Int {
@@ -38,3 +37,4 @@ class MainActivity : BaseActivity() {
 
 
 }
+

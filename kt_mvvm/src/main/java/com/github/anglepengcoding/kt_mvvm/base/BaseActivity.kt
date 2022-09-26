@@ -134,9 +134,6 @@ open abstract class BaseActivity : AppCompatActivity(), IBaseUIView {
      * 加载中
      */
     fun showLoadingDialog() {
-        mBtAgain.visibility = View.VISIBLE
-        mTvAgain.visibility = View.VISIBLE
-        mTvAgain.text = "加载中"
         mLottie!!.setAnimation("loading.json")
         mLottie.playAnimation()
     }
@@ -151,6 +148,8 @@ open abstract class BaseActivity : AppCompatActivity(), IBaseUIView {
      * 无网络
      */
     fun unknownHostDialog() {
+        mTvAgain.visibility = View.VISIBLE
+        mBtAgain.visibility = View.VISIBLE
         mTvAgain.text = "无网络"
         mLottie!!.setAnimation("unknownHost.json")
         mLottie.playAnimation()
@@ -160,6 +159,8 @@ open abstract class BaseActivity : AppCompatActivity(), IBaseUIView {
      * 网络超时
      */
     fun timeOutDialog() {
+        mTvAgain.visibility = View.VISIBLE
+        mBtAgain.visibility = View.VISIBLE
         mTvAgain.text = "网络超时"
         mLottie!!.setAnimation("unknownHost.json")
         mLottie.playAnimation()
@@ -170,6 +171,8 @@ open abstract class BaseActivity : AppCompatActivity(), IBaseUIView {
      * 数据错误,json错误
      */
     fun jsonSyntaxDialog() {
+        mTvAgain.visibility = View.VISIBLE
+        mBtAgain.visibility = View.VISIBLE
         mTvAgain.text = "数据错误"
         mLottie!!.setAnimation("json_syntax.json")
         mLottie.playAnimation()
@@ -179,6 +182,8 @@ open abstract class BaseActivity : AppCompatActivity(), IBaseUIView {
      * 网络错误
      */
     fun socketDialog() {
+        mTvAgain.visibility = View.VISIBLE
+        mBtAgain.visibility = View.VISIBLE
         mTvAgain.text = "网络错误"
         mLottie!!.setAnimation("unknownHost.json")
         mLottie.playAnimation()
@@ -188,6 +193,8 @@ open abstract class BaseActivity : AppCompatActivity(), IBaseUIView {
      * 未知错误
      */
     fun elseNetDialog() {
+        mTvAgain.visibility = View.VISIBLE
+        mBtAgain.visibility = View.VISIBLE
         mTvAgain.text = "未知错误"
         mLottie!!.setAnimation("json_syntax.json")
         mLottie.playAnimation()
