@@ -246,11 +246,11 @@ inline fun <T> VmLiveData<T>.vmObserverMain(
     observe(activity) {
         when (it) {
             is VmState.Loading -> {
-//                if (activity.getBaseViewStatus() != EBaseViewStatus.SUCCESS) activity.showLoadingLayout()
+                activity.showLoadingDialog()
             }
             is VmState.Success -> {
                 onSuccess(it.data)
-//                activity.showSuccessLayout()
+                activity.dismissLoadingDialog()
                 onComplete()
             }
             is VmState.Error -> {
@@ -293,13 +293,13 @@ inline fun <T> VmLiveData<T>.vmObserverLoading(
             }
             is VmState.Error -> {
                 if (null != tips && tips) {
-//                    when (it.error.errorMsg) {
-//                        "无网络连接" -> fragment.unknownHostDialog()
-//                        "网络超时" -> fragment.timeOutDialog()
-//                        "数据错误,json错误" -> fragment.jsonSyntaxDialog()
-//                        "网络错误" -> fragment.socketDialog()
-//                        "未知错误" -> fragment.elseNetDialog()
-//                    }
+                    when (it.error.errorMsg) {
+                        "无网络连接" -> fragment.unknownHostDialog()
+                        "网络超时" -> fragment.timeOutDialog()
+                        "数据错误,json错误" -> fragment.jsonSyntaxDialog()
+                        "网络错误" -> fragment.socketDialog()
+                        "未知错误" -> fragment.elseNetDialog()
+                    }
                 }
             }
         }
@@ -331,13 +331,15 @@ inline fun <T> VmLiveData<T>.vmObserverLoading(
                 onComplete()
             }
             is VmState.Error -> {
-//                when (it.error.errorMsg) {
-//                    "无网络连接" -> activity.unknownHostDialog()
-//                    "网络超时" -> activity.timeOutDialog()
-//                    "数据错误,json错误" -> activity.jsonSyntaxDialog()
-//                    "网络错误" -> activity.socketDialog()
-//                    "未知错误" -> activity.elseNetDialog()
-//                }
+                if (null != tips && tips) {
+                    when (it.error.errorMsg) {
+                        "无网络连接" -> fragment.unknownHostDialog()
+                        "网络超时" -> fragment.timeOutDialog()
+                        "数据错误,json错误" -> fragment.jsonSyntaxDialog()
+                        "网络错误" -> fragment.socketDialog()
+                        "未知错误" -> fragment.elseNetDialog()
+                    }
+                }
                 onComplete()
             }
         }
@@ -361,18 +363,22 @@ inline fun <T> VmLiveData<T>.vmObserverDefault(
     observe(fragment) {
         when (it) {
             is VmState.Loading -> {
+                fragment.showLoadingDialog()
             }
             is VmState.Success -> {
                 onSuccess(it.data)
+                fragment.dismissLoadingDialog()
             }
             is VmState.Error -> {
-//                when (it.error.errorMsg) {
-//                    "无网络连接" -> activity.unknownHostDialog()
-//                    "网络超时" -> activity.timeOutDialog()
-//                    "数据错误,json错误" -> activity.jsonSyntaxDialog()
-//                    "网络错误" -> activity.socketDialog()
-//                    "未知错误" -> activity.elseNetDialog()
-//                }
+                if (null != tips && tips) {
+                    when (it.error.errorMsg) {
+                        "无网络连接" -> fragment.unknownHostDialog()
+                        "网络超时" -> fragment.timeOutDialog()
+                        "数据错误,json错误" -> fragment.jsonSyntaxDialog()
+                        "网络错误" -> fragment.socketDialog()
+                        "未知错误" -> fragment.elseNetDialog()
+                    }
+                }
             }
         }
     }
@@ -395,19 +401,23 @@ inline fun <T> VmLiveData<T>.vmObserverDefault(
     observe(fragment) {
         when (it) {
             is VmState.Loading -> {
+                fragment.showLoadingDialog()
             }
             is VmState.Success -> {
                 onSuccess(it.data)
+                fragment.dismissLoadingDialog()
                 onComplete()
             }
             is VmState.Error -> {
-//                when (it.error.errorMsg) {
-//                    "无网络连接" -> activity.unknownHostDialog()
-//                    "网络超时" -> activity.timeOutDialog()
-//                    "数据错误,json错误" -> activity.jsonSyntaxDialog()
-//                    "网络错误" -> activity.socketDialog()
-//                    "未知错误" -> activity.elseNetDialog()
-//                }
+                if (null != tips && tips) {
+                    when (it.error.errorMsg) {
+                        "无网络连接" -> fragment.unknownHostDialog()
+                        "网络超时" -> fragment.timeOutDialog()
+                        "数据错误,json错误" -> fragment.jsonSyntaxDialog()
+                        "网络错误" -> fragment.socketDialog()
+                        "未知错误" -> fragment.elseNetDialog()
+                    }
+                }
                 onComplete()
             }
         }
@@ -430,20 +440,22 @@ inline fun <T> VmLiveData<T>.vmObserverMain(
     observe(fragment) {
         when (it) {
             is VmState.Loading -> {
-//                if (fragment.getBaseViewStatus() != EBaseViewStatus.SUCCESS) fragment.showLoadingLayout()
+                fragment.showLoadingDialog()
             }
             is VmState.Success -> {
                 onSuccess(it.data)
-//                fragment.showSuccessLayout()
+                fragment.dismissLoadingDialog()
             }
             is VmState.Error -> {
-//                when (it.error.errorMsg) {
-//                    "无网络连接" -> activity.unknownHostDialog()
-//                    "网络超时" -> activity.timeOutDialog()
-//                    "数据错误,json错误" -> activity.jsonSyntaxDialog()
-//                    "网络错误" -> activity.socketDialog()
-//                    "未知错误" -> activity.elseNetDialog()
-//                }
+                if (null != tips && tips) {
+                    when (it.error.errorMsg) {
+                        "无网络连接" -> fragment.unknownHostDialog()
+                        "网络超时" -> fragment.timeOutDialog()
+                        "数据错误,json错误" -> fragment.jsonSyntaxDialog()
+                        "网络错误" -> fragment.socketDialog()
+                        "未知错误" -> fragment.elseNetDialog()
+                    }
+                }
             }
         }
     }
@@ -467,21 +479,23 @@ inline fun <T> VmLiveData<T>.vmObserverMain(
     observe(fragment) {
         when (it) {
             is VmState.Loading -> {
-//                if (fragment.getBaseViewStatus() != EBaseViewStatus.SUCCESS) fragment.showLoadingLayout()
+                fragment.showLoadingDialog()
             }
             is VmState.Success -> {
                 onSuccess(it.data)
-//                fragment.showSuccessLayout()
+                fragment.dismissLoadingDialog()
                 onComplete()
             }
             is VmState.Error -> {
-//                when (it.error.errorMsg) {
-//                    "无网络连接" -> activity.unknownHostDialog()
-//                    "网络超时" -> activity.timeOutDialog()
-//                    "数据错误,json错误" -> activity.jsonSyntaxDialog()
-//                    "网络错误" -> activity.socketDialog()
-//                    "未知错误" -> activity.elseNetDialog()
-//                }
+                if (null != tips && tips) {
+                    when (it.error.errorMsg) {
+                        "无网络连接" -> fragment.unknownHostDialog()
+                        "网络超时" -> fragment.timeOutDialog()
+                        "数据错误,json错误" -> fragment.jsonSyntaxDialog()
+                        "网络错误" -> fragment.socketDialog()
+                        "未知错误" -> fragment.elseNetDialog()
+                    }
+                }
                 onComplete()
             }
         }

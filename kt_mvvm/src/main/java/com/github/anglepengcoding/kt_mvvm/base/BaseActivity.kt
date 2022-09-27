@@ -1,5 +1,6 @@
 package com.github.anglepengcoding.kt_mvvm.base
 
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -23,6 +24,7 @@ import java.util.concurrent.TimeUnit
  */
 open abstract class BaseActivity : AppCompatActivity(), IBaseUIView {
 
+    lateinit var mContext: Context
     /*  开发者自由发挥 */
     var leftImageView: ImageView? = null //标题栏左键
     var rightImageView: ImageView? = null //标题栏右键
@@ -43,6 +45,7 @@ open abstract class BaseActivity : AppCompatActivity(), IBaseUIView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        mContext = this
         LogUtils.e(this::class.java.simpleName + ">>> onCreate <<<")
         initStatusBar()
         initViews()
@@ -120,7 +123,7 @@ open abstract class BaseActivity : AppCompatActivity(), IBaseUIView {
 
     override fun onPause() {
         mLottie?.pauseAnimation()
-        LogUtils.e(this::class.java.simpleName + ">>> onPa use <<<")
+        LogUtils.e(this::class.java.simpleName + ">>> onPause <<<")
         super.onPause()
     }
 
