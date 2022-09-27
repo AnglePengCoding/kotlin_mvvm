@@ -14,12 +14,22 @@ import rxhttp.toClass
  */
 class ClassifyRepository {
 
-
     private suspend fun getSensorDataStatList(url: String, pagerSize: Int): BaseData<Sensor> {
         val result = RxHttp.get(url)
-            .addHeader("userToken","app:6688861f4ffe11ec800384144dd3207e:fda921778596457ca5254a7374eb1483")
-            .addQuery("pager.pageNumber", "10")
-            .addQuery("pager.pageSize", pagerSize)
+            .addHeader(
+                "userToken",
+                "app:6688861f4ffe11ec800384144dd3207e:fda921778596457ca5254a7374eb1483"
+            )
+            .addQuery("pager.pageNumber", pagerSize)
+            .addQuery("pager.pageSize", "10")
+            .addQuery("name", "")
+            .addQuery("supTimes", "0")
+            .addQuery("industry", "")
+            .addQuery("frequence", "")
+            .addQuery("endCheckDate", "")
+            .addQuery("mainType", "")
+            .addQuery("checkFail", "")
+            .addQuery("startCheckDate", "")
             .toClass<Sensor>()
             .await()
         return BaseData("", result, "200")
@@ -31,6 +41,7 @@ class ClassifyRepository {
     suspend fun onRefresh(): BaseData<Sensor> =
         getSensorDataStatList(Constants.WAN_ANDROID_BASEURL2 + Constants.WAN_ARTICLE2, page)
 
-    suspend fun loadMore(): BaseData<Sensor> =
-        getSensorDataStatList(Constants.WAN_ANDROID_BASEURL2 + Constants.WAN_ARTICLE2, page++)
+    suspend fun loadMore(page: Int): BaseData<Sensor> =
+        getSensorDataStatList(Constants.WAN_ANDROID_BASEURL2 + Constants.WAN_ARTICLE2,
+            page)
 }

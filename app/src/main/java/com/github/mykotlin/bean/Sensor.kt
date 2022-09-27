@@ -27,7 +27,7 @@ data class Sensor(
 @Keep
 @Parcelize
 data class Result(
-    val list: List<ListItem>?,
+    val list: MutableList<ListItem>?,
 ) : Parcelable {
     override fun toString(): String {
         return this.toJsonString()

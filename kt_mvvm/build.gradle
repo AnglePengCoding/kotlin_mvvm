@@ -80,7 +80,7 @@ dependencies {
     //更新库
     api 'io.github.azhon:appupdate:4.2.2'
     //adapter
-    api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.7'
+    api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.8'
     //coil图片加载框架基于Kotlin 协程 比glide更轻量
     api 'io.coil-kt:coil:0.11.0'
     //kt的反射库(大小几百k)
@@ -89,4 +89,5 @@ dependencies {
     //实现大文件上传
     api 'com.yolanda.nohttp:nohttp:1.0.2'
     api 'com.airbnb.android:lottie:5.2.0'
+    api 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 }
