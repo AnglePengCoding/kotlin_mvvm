@@ -1,4 +1,4 @@
-package com.github.mykotlin.model.main
+package com.github.mykotlin.model.activity.main
 
 import com.github.anglepengcoding.kt_mvvm.base.BaseData
 import com.github.mykotlin.Test

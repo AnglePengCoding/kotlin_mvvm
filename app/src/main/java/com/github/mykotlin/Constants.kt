@@ -14,7 +14,10 @@ class Constants {
         @DefaultDomain //设置为默认域名
         const val WAN_ANDROID_BASEURL = "http://hgz.app.creditmoa.com/"
 
-        const val WAN_ARTICLE = "version/getLatestOne"
+        @DefaultDomain //设置为默认域名
+        const val WAN_ANDROID_BASEURL2 = "http://qd.app.creditmoa.com/"
 
+        const val WAN_ARTICLE = "version/getLatestOne"
+        const val WAN_ARTICLE2 = "ent/searchList"
     }
 }

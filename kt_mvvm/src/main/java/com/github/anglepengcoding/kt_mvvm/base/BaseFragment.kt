@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.fragment_base.*
  * Created by on 2022/9/23 0023
  * @website https://github.com/AnglePengCoding
  */
-abstract class BaseFragment : Fragment(), View.OnClickListener, IBaseUIView {
+abstract class BaseFragment : Fragment(), IBaseUIView {
 
     lateinit var mContext: Context
 

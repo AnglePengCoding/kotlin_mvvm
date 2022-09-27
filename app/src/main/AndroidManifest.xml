@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Mykotlin">
         <activity
-            android:name=".model.main.MainActivity"
+            android:name="com.github.mykotlin.model.activity.main.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
