@@ -41,7 +41,9 @@ class ClassifyRepository {
     suspend fun onRefresh(): BaseData<Sensor> =
         getSensorDataStatList(Constants.WAN_ANDROID_BASEURL2 + Constants.WAN_ARTICLE2, page)
 
-    suspend fun loadMore(page: Int): BaseData<Sensor> =
+    suspend fun loadMore(): BaseData<Sensor> =
         getSensorDataStatList(Constants.WAN_ANDROID_BASEURL2 + Constants.WAN_ARTICLE2,
             page)
+
+
 }
